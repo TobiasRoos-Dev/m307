@@ -109,7 +109,6 @@ $(document).ready(function () {
                 let content = Mustache.render(template, response);
                 let settings = {
                     retrieve:   true,
-                    // info:       false,
                     paging:     false,
                     lengthMenu: false,
                 }
