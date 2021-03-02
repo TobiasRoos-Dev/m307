@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" href="css/styles.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+<div id="picker"></div>
+
+<nav>
+    <div class="nav-wrapper">
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="#" class="black">Materialize CSS</a></li>
+            <li><a href="#" class="blue">Components</a></li>
+            <li><a href="#" class="red">JavaScript</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="new_entry">
+        <a class="btn-floating float-right btn-large waves-effect waves-light red add" href="#new_entry"
+           data-title="Auto erfassen"><i class="material-icons">add</i></a>
+        <div id="new_entry" class="modal modal-fixed-footer">
+            <form id="row_form">
+                <div class="modal-content">
+                    <h4 class="title"></h4>
+                    <div class="content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-green btn red" type="button" id="cancel">Abbrechen
+                    </button>
+                    <button class="waves-effect waves-green btn green" type="submit" id="save">Speichern</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="overflow">
+    <div class="container">
+        <div class="table">
+            <table class="">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>kraftstoff</th>
+                    <th>farbe</th>
+                    <th>bauart</th>
+                    <th>tank</th>
+                    <th>action</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script id="template" type="x-tmpl-mustache">
+    {{#data}}
+        {{#.}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{kraftstoff}}</td>
+                <td><div class="coloranzeige" style="background-color: {{farbe}}"></div>{{farbe}}</td>
+                <td>{{bauart}}</td>
+                <td>{{tank}}</td>
+                <td data-id="{{id}}" class="buttons">
+                    <a class="tank"><i class="material-icons blue-text">directions_car_filled</i></a>
+                    <a data-title="Auto editieren" class="edit"><i
+                            class="material-icons green-text">edit</i></a>
+                    <a class="delete"><i class="material-icons red-text">delete_forever</i></a>
+                </td>
+            </tr>
+        {{/.}}
+    {{/data}}
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.1.0/mustache.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="js/datatables.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+
+<script src="js/index.js"></script>
+
+<script>
+    $(document).ready(function () {
+        /*
+        var colorPicker = new iro.ColorPicker("#picker", {
+            // Set the size of the color picker
+            width: 100,
+            // Set the initial color to pure red
+            color: "#ff0000"
+        });
+        */
+    })
+</script>
+</body>
+</html>

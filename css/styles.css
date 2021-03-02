@@ -1,0 +1,60 @@
+nav {
+    margin-bottom: 20px;
+}
+
+.new_entry a.add {
+    float: right;
+}
+
+.coloranzeige {
+    height: 25px;
+    display: inline-block;
+    width: 80px;
+    position: relative;
+    top: 5px;
+    margin-right: 5px;
+    box-shadow: 0px 0px 15px 0px rgba(0,0,0, 0.15);
+}
+
+.buttons a {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 641px) {
+    .overflow {
+        width: 100%;
+        overflow-x: auto;
+    }
+}
+
+
+table.dataTable tr td {
+    transition: .1s;
+}
+
+table.dataTable tr:hover td {
+    background: #ececec;
+}
+
+tr.even td {
+    background: #f3f3f3;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid #9e9e9e;
+    border-radius: 0;
+}
+
+div.table {
+    margin-bottom: 20px;
+}
+
+.colorpicker {
+    height: 30px;
+    width: 100px;
+    background: #000;
+    border: 3px solid #d2d2d2;
+    display: inline-block;
+}

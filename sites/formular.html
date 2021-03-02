@@ -1,0 +1,40 @@
+<div id="form_content">
+
+</div>
+
+<script id="form-template" type="x-tmpl-mustache">
+    {{#data}}
+        <div class="row">
+        <div class="input-field col s6">
+            <input id="name" name="name" type="text" class="validate" required {{#name}}value="{{name}}"{{/name}}>
+            <label for="name">Name</label>
+        </div>
+        <div class="input-field col s6">
+            <input id="kraftstoff" name="kraftstoff" type="text" class="validate" required {{#kraftstoff}}value="{{kraftstoff}}"{{/kraftstoff}}>
+            <label for="kraftstoff">Kraftstoff</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s6">
+            Farbe: <input id="color" name="color" type="color" class="validate" required {{#farbe}}value="{{farbe}}"{{/farbe}}>
+        </div>
+        <div class="col s6">
+            <label>Bauart</label>
+            <select name="type" required class="browser-default">
+                <option value="" disabled selected>Bitte wählen</option>
+                <option value="SUV">SUV</option>
+                <option value="Limousine">Limousine</option>
+                <option value="Bus">Bus</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="input-field col s6">
+            <input id="tank" name="tank" type="number" class="validate" required {{#tank}}value="{{tank}}"{{/tank}}>
+            <label for="tank">Tank</label>
+        </div>
+        <input id="id" name="id" type="hidden" {{#id}}value="{{id}}"{{/id}}>
+    </div>
+    {{/data}}
+</script>
