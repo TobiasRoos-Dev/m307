@@ -134,6 +134,8 @@ if($method !== 'none' && empty($response)) {
     $response['data'] = 'no method declared';
 }
 
+$conn->close();
+
 echo json_encode($response);
 
 function checkRequiredField($string, $field, &$error_msg) {
