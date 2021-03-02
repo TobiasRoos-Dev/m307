@@ -65,34 +65,41 @@ if($method !== 'none' && empty($response)) {
             break;
         case 'insert': // Post, Method and Form
             $name       = $_REQUEST['name'];
-            $kraftstoff = $_REQUEST['kraftstoff'];
-            $farbe      = $_REQUEST['color'];
-            $bauart     = $_REQUEST['type'];
-            $tank       = $_REQUEST['tank'];
+            $kraftstoff = $_REQUEST['kraftstoff'] ? $_REQUEST['kraftstoff'] : '';
+            $farbe      = $_REQUEST['color'] ? $_REQUEST['color'] : '';
+            $bauart     = $_REQUEST['type'] ? $_REQUEST['type'] : '';
+            $tank       = $_REQUEST['tank'] ? $_REQUEST['tank'] : 0;
+            $error_msg  = [];
 
-            $query = "INSERT INTO autos (`name`, `kraftstoff`, `farbe`, `bauart`, `tank`) VALUES ('$name', '$kraftstoff', '$farbe', '$bauart', '$tank')";
+            $success = checkRequiredField($name, 'name', $error_msg);
+            if($success) {
+                $query = "INSERT INTO autos (`name`, `kraftstoff`, `farbe`, `bauart`, `tank`) VALUES ('$name', '$kraftstoff', '$farbe', '$bauart', '$tank')";
+            }
 
             $conn->query($query);
 
-            $response['debug'] = $conn->error;
-            $response['debug2'] = $query;
-
-            $response['success'] = true;
-            $response['method'] = 'insert';
-            $response['id'] = $conn->insert_id;;
+            $response['success'] = $success;
+            $response['message'] = $error_msg;
+            $response['method']  = 'insert';
+            $response['id']      = $conn->insert_id;;
             break;
         case 'update':
             $name       = $_REQUEST['name'];
-            $kraftstoff = $_REQUEST['kraftstoff'];
-            $farbe      = $_REQUEST['color'];
-            $bauart     = $_REQUEST['type'];
-            $tank       = $_REQUEST['tank'];
+            $kraftstoff = $_REQUEST['kraftstoff'] ? $_REQUEST['kraftstoff'] : '';
+            $farbe      = $_REQUEST['color'] ? $_REQUEST['color'] : '';
+            $bauart     = $_REQUEST['type'] ? $_REQUEST['type'] : '';
+            $tank       = $_REQUEST['tank'] ? $_REQUEST['tank'] : 0;
             $id         = $_REQUEST['id'];
+            $error_msg  = [];
 
-            $query = "UPDATE autos SET `tank`=$tank , `name`='$name', `kraftstoff`='$kraftstoff', `farbe`='$farbe', `bauart`='$bauart' WHERE `id`=$id";
-            $conn->query($query);
+            $success = checkRequiredField($name, 'name', $error_msg);
+            if($success) {
+                $query = "UPDATE autos SET `tank`=$tank , `name`='$name', `kraftstoff`='$kraftstoff', `farbe`='$farbe', `bauart`='$bauart' WHERE `id`=$id";
+                $conn->query($query);
+            }
 
-            $response['success'] = true;
+            $response['success'] = $success;
+            $response['message'] = $error_msg;
             $response['method'] = 'update';
             $response['id'] = $id;
             break;
@@ -128,6 +135,16 @@ if($method !== 'none' && empty($response)) {
 }
 
 echo json_encode($response);
+
+function checkRequiredField($string, $field, &$error_msg) {
+
+    if(strlen($string) < 3 || strlen($string) > 255) {
+        $error_msg[] = 'Feld "' . $field . '" muss mindestens 3 Zeichen lang sein und unter 255 Zeichen sein.';
+        return false;
+    }
+
+    return true;
+}
 
 function checkDB() {
     $con = NULL;

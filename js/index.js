@@ -33,8 +33,18 @@ $(document).ready(function () {
                                 icon: 'success',
                             });
                         }
+                        M.Modal.getInstance($('.modal')).close();
+                    } else {
+                        response.message.forEach(function (msg) {
+                            fehlermeldungen += msg + "\n";
+                        })
+                        Swal.fire(
+                            'Fehler!',
+                            fehlermeldungen,
+                            'error'
+                        )
                     }
-                    M.Modal.getInstance($('.modal')).close();
+
                 }
             })
 
