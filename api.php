@@ -8,10 +8,11 @@
  *
  */
 
-define('DB_NAME', 'm307_db');
+define('DB_NAME', 'm307_tobias');
 define('DB_USER', 'root');
 define('DB_PSWD', '');
 define('DB_HOST', 'localhost');
+define('DB_TABLE', 'tobias_inventar');
 
 $response = [];
 
@@ -38,10 +39,10 @@ if(isset($_POST['method'])) {
 
 if($method !== 'none' && empty($response)) {
     switch ($method) {
-        case 'tanken':
+        /*case 'tanken':
             $success = true;
             if(isset($_REQUEST['id'])) {
-                $sql = 'UPDATE autos SET `tank` = (`tank` + 1) WHERE `id` = ' . $_REQUEST['id'];
+                $sql = 'UPDATE ' . DB_TABLE . ' SET `tank` = (`tank` + 1) WHERE `id` = ' . $_REQUEST['id'];
                 $conn->query($sql);
             } else {
                 $success = false;
@@ -49,12 +50,12 @@ if($method !== 'none' && empty($response)) {
             }
             $response['success'] = $success;
             $response['method'] = 'tanken';
-            break;
+            break;*/
         case 'delete':  // GET, Method, ID
 
             $success = true;
             if(isset($_REQUEST['id'])) {
-                $sql = 'DELETE FROM autos WHERE `id` = ' . $_REQUEST['id'];
+                $sql = 'DELETE FROM ' . DB_TABLE . ' WHERE `id` = ' . $_REQUEST['id'];
                 $conn->query($sql);
             } else {
                 $success = false;
@@ -65,15 +66,22 @@ if($method !== 'none' && empty($response)) {
             break;
         case 'insert': // Post, Method and Form
             $name       = $_REQUEST['name'];
-            $kraftstoff = isset($_REQUEST['kraftstoff']) ? $_REQUEST['kraftstoff'] : '';
-            $farbe      = isset($_REQUEST['color']) ? $_REQUEST['color'] : '';
-            $bauart     = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
-            $tank       = isset($_REQUEST['tank']) ? $_REQUEST['tank'] : 0;
+            $invnr      = $_REQUEST['invnr'];
+            $kategorie  = $_REQUEST['kategorie'];
+            $date       = isset($_REQUEST['date']) ? $_REQUEST['date'] : '0000-00-00';
+            if($date) {
+                $date_obj = DateTime::createFromFormat('d.m.Y', $date);
+                $date = date_format($date_obj, 'Y-m-d');
+            }
+            $bemerkung  = isset($_REQUEST['bemerkung']) ? $_REQUEST['bemerkung'] : '';
             $error_msg  = [];
 
-            $success = checkRequiredField($name, 'name', $error_msg);
+            $success[] = checkRequiredField($name, 'Gerätename', $error_msg);
+            $success[] = checkRequiredField($invnr, 'Inventarnummer', $error_msg);
+            $success[] = checkRequiredField($kategorie, 'Kategorie', $error_msg);
+            $success = !in_array(false, $success);
             if($success) {
-                $query = "INSERT INTO autos (`name`, `kraftstoff`, `farbe`, `bauart`, `tank`) VALUES ('$name', '$kraftstoff', '$farbe', '$bauart', '$tank')";
+                $query = "INSERT INTO " . DB_TABLE . " (`name`, `invnr`, `kategorie`, `date`, `bemerkung`) VALUES ('$name', '$invnr', '$kategorie', '$date', '$bemerkung')";
                 $conn->query($query);
             }
 
@@ -85,18 +93,24 @@ if($method !== 'none' && empty($response)) {
             break;
         case 'update':
             $name       = $_REQUEST['name'];
-            $kraftstoff = isset($_REQUEST['kraftstoff']) ? $_REQUEST['kraftstoff'] : '';
-            $farbe      = isset($_REQUEST['color']) ? $_REQUEST['color'] : '';
-            $bauart     = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
-            $tank       = isset($_REQUEST['tank']) ? $_REQUEST['tank'] : 0;
+            $invnr      = $_REQUEST['invnr'];
+            $kategorie  = $_REQUEST['kategorie'];
+            $date       = isset($_REQUEST['date']) ? $_REQUEST['date'] : '';
+            $date_obj   = DateTime::createFromFormat('d.m.Y', $date);
+            $date       = date_format($date_obj, 'Y-m-d');
+            $bemerkung  = isset($_REQUEST['bemerkung']) ? $_REQUEST['bemerkung'] : '';
             $id         = $_REQUEST['id'];
             $error_msg  = [];
 
-            $success = checkRequiredField($name, 'name', $error_msg);
+            $success[] = checkRequiredField($name, 'Gerätename', $error_msg);
+            $success[] = checkRequiredField($invnr, 'Inventarnummer', $error_msg);
+            $success[] = checkRequiredField($kategorie, 'Kategorie', $error_msg);
+            $success   = !in_array(false, $success);
             if($success) {
-                $query = "UPDATE autos SET `tank`=$tank , `name`='$name', `kraftstoff`='$kraftstoff', `farbe`='$farbe', `bauart`='$bauart' WHERE `id`=$id";
+                $query = "UPDATE " . DB_TABLE . " SET `name` = '$name', `invnr` = '$invnr', `kategorie` = '$kategorie', `date` = '$date', `bemerkung` = '$bemerkung' WHERE `id` = $id";
                 $conn->query($query);
             }
+
 
             $response['success'] = $success;
             $response['message'] = $error_msg;
@@ -104,22 +118,32 @@ if($method !== 'none' && empty($response)) {
             $response['id'] = $id;
             break;
         case 'get':
-            $query = 'SELECT * FROM autos';
+
+            $was = isset($_REQUEST['col']) ? $_REQUEST['col'] : '*';
+            $query = 'SELECT ' . $was . ' FROM ' . DB_TABLE;
             $id = isset($request['id']) ? intval($request['id']) : -1;
             if($id !== -1) $query .= ' WHERE `id`=' . $id . ';';
 
             $result = $conn->query($query);
 
-            $data = [];
+            $success = $conn->errno == 0;
 
-            if($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    $data[] = $row;
+            $data = [];
+            $error_msg = [];
+            if($success) {
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $row['date'] = date_format(DateTime::createFromFormat('Y-m-d', $row['date']), 'd.m.Y');
+                        $data[] = $row;
+                    }
                 }
+            } else {
+                $error_msg[] = 'Daten konnten nicht geholt werden!';
             }
 
-            $response['success'] = true;
+            $response['success'] = $success;
             $response['method'] = 'delete';
+            $response['message'] = $error_msg;
             $response['data'] = $data;
             break;
         default:
@@ -141,7 +165,7 @@ echo json_encode($response);
 function checkRequiredField($string, $field, &$error_msg) {
 
     if(strlen($string) < 3 || strlen($string) > 255) {
-        $error_msg[] = 'Feld "' . $field . '" muss mindestens 3 Zeichen lang sein und unter 255 Zeichen sein.';
+        $error_msg[] = 'Feld "' . $field . '" muss mindestens 3 Zeichen und höchstens 255 Zeichen lang sein.';
         return false;
     }
 
@@ -155,24 +179,24 @@ function checkDB() {
             $sql = "CREATE DATABASE IF NOT EXISTS " . DB_NAME . " DEFAULT CHARACTER SET utf8";
             $con->query($sql);
             $con->select_db(DB_NAME);
-            $sql = "CREATE TABLE autos (
+            $sql = "CREATE TABLE ". DB_TABLE . " (
                 id INT NOT NULL AUTO_INCREMENT,
                 name VARCHAR(255) NOT NULL,
-                kraftstoff VARCHAR(255) NOT NULL,
-                farbe VARCHAR(9) NOT NULL,
-                bauart enum('SUV', 'Limousine', 'Bus'),
-                tank INT NOT NULL,
+                invnr VARCHAR(255) NOT NULL,
+                kategorie enum('Computer', 'Audio', 'Monitor') DEFAULT('Computer'),
+                `date` DATE NOT NULL,
+                bemerkung VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )";
 
             $con->query($sql);
 
             $sql = "INSERT INTO
-                      autos (name, kraftstoff, farbe, bauart, tank)
+                      " . DB_TABLE . " (`name`, `invnr`, `kategorie`, `date`, `bemerkung`)
                     VALUES
-                      ('Opel', 'Benzin', '#000000', 'SUV', 1),
-                      ('Audi', 'Diesel', '#ffffff', 'Limousine', 50),
-                      ('BMW', 'Diesel', '#ff0000', 'Limousine', 5)";
+                      ('Apple Macbook Air 13.3\"', 'KL156', 'Computer', '2016-01-01', 'Bemerkung'),
+                      ('Apple Magic Mouse 2', 'ZL862', 'Audio', '2017-01-01', 'Bemerkung'),
+                      ('Apple Thunderbolt/Ethernet', 'DL866', 'Monitor', '2018-01-01', 'Bemerkung')";
             $con->query($sql);
         }
     }

@@ -31,7 +31,7 @@
 <div class="container">
     <div class="new_entry">
         <a class="btn-floating float-right btn-large waves-effect waves-light red add" href="#new_entry"
-           data-title="Auto erfassen"><i class="material-icons">add</i></a>
+           data-title="Gerät erfassen"><i class="material-icons">add</i></a>
         <div id="new_entry" class="modal modal-fixed-footer">
             <form id="row_form">
                 <div class="modal-content">
@@ -53,13 +53,13 @@
             <table class="">
                 <thead>
                 <tr>
-                    <th>id</th>
-                    <th>name</th>
-                    <th>kraftstoff</th>
-                    <th>farbe</th>
-                    <th>bauart</th>
-                    <th>tank</th>
-                    <th>action</th>
+                    <!--<th>id</th>-->
+                    <th>Gerätename</th>
+                    <th>Inventarnummer</th>
+                    <th>Kategorie</th>
+                    <th>Kaufdatum</th>
+                    <th>Bemerkung</th>
+                    <th>Aktion</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -75,15 +75,15 @@
     {{#data}}
         {{#.}}
             <tr>
-                <td>{{id}}</td>
+                <!--<td>{{id}}</td>-->
                 <td>{{name}}</td>
-                <td>{{kraftstoff}}</td>
-                <td><div class="coloranzeige" style="background-color: {{farbe}}"></div>{{farbe}}</td>
-                <td>{{bauart}}</td>
-                <td>{{tank}}</td>
+                <td>{{invnr}}</td>
+                <td>{{kategorie}}</td>
+                <td>{{date}}</td>
+                <td>{{bemerkung}}</td>
                 <td data-id="{{id}}" class="buttons">
-                    <a class="tank"><i class="material-icons blue-text">directions_car_filled</i></a>
-                    <a data-title="Auto editieren" class="edit"><i
+                    <!--<a class="tank"><i class="material-icons blue-text">directions_car_filled</i></a>-->
+                    <a data-title="Gerät editieren" class="edit"><i
                             class="material-icons green-text">edit</i></a>
                     <a class="delete"><i class="material-icons red-text">delete_forever</i></a>
                 </td>
