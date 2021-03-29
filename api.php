@@ -8,9 +8,9 @@
  *
  */
 
-define('DB_NAME', 'm307_lll');
-define('DB_USER', 'm307_adm');
-define('DB_PSWD', 'NuwrQvd1nTZvpYvI');
+define('DB_NAME', 'm307_db');
+define('DB_USER', 'root');
+define('DB_PSWD', '');
 define('DB_HOST', 'localhost');
 
 $response = [];
@@ -88,10 +88,10 @@ if($method !== 'none' && empty($response)) {
             break;
         case 'update':
             $name       = $_REQUEST['name'];
-            $kraftstoff = $_REQUEST['kraftstoff'] ? $_REQUEST['kraftstoff'] : '';
-            $farbe      = $_REQUEST['color'] ? $_REQUEST['color'] : '';
-            $bauart     = $_REQUEST['type'] ? $_REQUEST['type'] : '';
-            $tank       = $_REQUEST['tank'] ? $_REQUEST['tank'] : 0;
+            $kraftstoff = isset($_REQUEST['kraftstoff']) ? $_REQUEST['kraftstoff'] : '';
+            $farbe      = isset($_REQUEST['color']) ? $_REQUEST['color'] : '';
+            $bauart     = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
+            $tank       = isset($_REQUEST['tank']) ? $_REQUEST['tank'] : 0;
             $id         = $_REQUEST['id'];
             $error_msg  = [];
 

@@ -35,7 +35,7 @@ $(document).ready(function () {
                         }
                         M.Modal.getInstance($('.modal')).close();
                     } else {
-                        fehlermeldungen = '';
+                        let fehlermeldungen = '';
                         response.message.forEach(function (msg) {
                             fehlermeldungen += msg + "<br>";
                         })
