@@ -65,18 +65,21 @@ if($method !== 'none' && empty($response)) {
             break;
         case 'insert': // Post, Method and Form
             $name       = $_REQUEST['name'];
-            $kraftstoff = $_REQUEST['kraftstoff'] ? $_REQUEST['kraftstoff'] : '';
-            $farbe      = $_REQUEST['color'] ? $_REQUEST['color'] : '';
-            $bauart     = $_REQUEST['type'] ? $_REQUEST['type'] : '';
-            $tank       = $_REQUEST['tank'] ? $_REQUEST['tank'] : 0;
+            $kraftstoff = isset($_REQUEST['kraftstoff']) ? $_REQUEST['kraftstoff'] : '';
+            $farbe      = isset($_REQUEST['color']) ? $_REQUEST['color'] : '';
+            $bauart     = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
+            $tank       = isset($_REQUEST['tank']) ? $_REQUEST['tank'] : 0;
             $error_msg  = [];
 
-            $success = checkRequiredField($name, 'name', $error_msg);
+            $success[] = checkRequiredField($name, 'name', $error_msg);
+            $success[] = checkRequiredField($kraftstoff, 'kraftstoff', $error_msg);
+
+            $success = !in_array(false, $success);
             if($success) {
                 $query = "INSERT INTO autos (`name`, `kraftstoff`, `farbe`, `bauart`, `tank`) VALUES ('$name', '$kraftstoff', '$farbe', '$bauart', '$tank')";
+                $conn->query($query);
             }
 
-            $conn->query($query);
 
             $response['success'] = $success;
             $response['message'] = $error_msg;
@@ -92,7 +95,9 @@ if($method !== 'none' && empty($response)) {
             $id         = $_REQUEST['id'];
             $error_msg  = [];
 
-            $success = checkRequiredField($name, 'name', $error_msg);
+            $success[] = checkRequiredField($name, 'name', $error_msg);
+
+            $success = !in_array(false, $success);
             if($success) {
                 $query = "UPDATE autos SET `tank`=$tank , `name`='$name', `kraftstoff`='$kraftstoff', `farbe`='$farbe', `bauart`='$bauart' WHERE `id`=$id";
                 $conn->query($query);

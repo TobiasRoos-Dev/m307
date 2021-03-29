@@ -35,8 +35,9 @@ $(document).ready(function () {
                         }
                         M.Modal.getInstance($('.modal')).close();
                     } else {
+                        fehlermeldungen = '';
                         response.message.forEach(function (msg) {
-                            fehlermeldungen += msg + "\n";
+                            fehlermeldungen += msg + "<br>";
                         })
                         Swal.fire(
                             'Fehler!',
